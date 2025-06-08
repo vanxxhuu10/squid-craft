@@ -1,6 +1,6 @@
 window.onload = () => {
   const speakBtn = document.getElementById("speakBtn");
-  const message = "Welcome to Squid Game on Minecraft, hosted by the Event Managers Club! Get ready to step into the ultimate test of skill, strategy, and survival. From the nerve-wracking Red Light, Green Light to the intense final PvP Arena, you'll face six thrilling challenges designed to eliminate all but the sharpest player. With 60 participants and only one winner, the competition will be fierce, the games unpredictable, and the stakes sky-high. Do you have what it takes to survive them all? Don’t miss out on this one-of-a-kind online event — register now and claim your place in the arena before slots run out. Let the games begin!";
+  const message = "Welcome to Squid Game on Minecraft, hosted by the Event Managers Club! Step into the ultimate test of skill, strategy, and survival across six thrilling challenges — from Red Light, Green Light to the intense final PvP Arena. With 60 players and only one winner, the competition will be fierce and the stakes sky-high. Think you can survive them all? Don’t miss this one-of-a-kind online event — register now and secure your spot before it’s too late. Let the games begin!";
   const speechText = document.getElementById("speechText");
   const countdownElem = document.getElementById("countdownTimer");
   const yesBtn = document.getElementById("yesBtn");
