@@ -1,6 +1,6 @@
 window.onload = () => {
   const speakBtn = document.getElementById("speakBtn");
-  const message = "Hello, Player. Welcome to the Game. Follow the instructions carefully to survive.";
+  const message = "Welcome to Squid Game on Minecraft, hosted by the Event Managers Club! Get ready to step into the ultimate test of skill, strategy, and survival. From the nerve-wracking Red Light, Green Light to the intense final PvP Arena, you'll face six thrilling challenges designed to eliminate all but the sharpest player. With 60 participants and only one winner, the competition will be fierce, the games unpredictable, and the stakes sky-high. Do you have what it takes to survive them all? Don’t miss out on this one-of-a-kind online event — register now and claim your place in the arena before slots run out. Let the games begin!";
   const speechText = document.getElementById("speechText");
   const countdownElem = document.getElementById("countdownTimer");
   const yesBtn = document.getElementById("yesBtn");
@@ -72,8 +72,8 @@ window.onload = () => {
 
     let count = 0;
     const repeatMessage = () => {
-      if (count < 2) {
-        const msg = new SpeechSynthesisUtterance("You have survived. Now you can register further.");
+      if (count < 1) {
+        const msg = new SpeechSynthesisUtterance("Welcome to the game — your fate is now sealed. May the odds be ever in your favor! Register yourself now to prove your skills and claim your place among the legends.");
         const voices = speechSynthesis.getVoices();
         const englishVoice = voices.find(v => v.lang.startsWith("en"));
         if (englishVoice) msg.voice = englishVoice;
@@ -112,7 +112,7 @@ window.onload = () => {
     noPopup.style.display = "block";
     document.body.classList.add("blur-background", "red-blink");
 
-    const msg = new SpeechSynthesisUtterance("You have been eliminated. Reload to Register Again");
+    const msg = new SpeechSynthesisUtterance("Choosing not to play means missing out — are you sure? For now, you’re Eliminated.");
     const voices = speechSynthesis.getVoices();
     const englishVoice = voices.find(v => v.lang.startsWith("en"));
     if (englishVoice) msg.voice = englishVoice;
