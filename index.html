@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Squid Game Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Top Logos -->
+  <img src="emc_logo-removebg-preview.png" alt="EMC Logo" class="top-left-logo" />
+
+  <!-- Heading -->
+  <h1 class="main-event-heading">SQUIDCRAFT</h1>
+
+  <!-- Fullscreen Background -->
+  <div class="fullscreen-image"></div>
+
+  <!-- Main Content -->
+  <main class="overlay-content">
+    <!-- Squid Game Images -->
+    <div class="squid-game-gallery">
+      <img src="image2.jpeg" alt="Game Art 1" class="animated-image" />
+      <img src="image5-removebg-preview.png" alt="Game Art 2" class="animated-image" />
+    </div>
+
+    <!-- Welcome Section -->
+    <h1 class="title">Welcome, Player</h1>
+    <button id="speakBtn" type="button">🟥 Get Started 🟥</button>
+    <p id="speechText" class="typing-text"></p>
+
+    <!-- Register Prompt -->
+    <div id="registerSection" style="display:none; margin-top: 30px; color: #ff004c; text-align: center;">
+      <h2>Register?</h2>
+      <button id="yesBtn" class="register-yes" type="button">Yes</button>
+      <button id="noBtn" class="register-no" type="button">No</button>
+    </div>
+
+    <!-- Further Registration Button -->
+    <div id="registerFurtherContainer" style="align-self: center; text-align:center; margin-top: 20px; display:none;">
+      <button id="registerFurtherBtn" class="popup-button" type="button">REGISTER</button>
+      
+      <div id="registrationForm" style="display: none; margin-top: 20px;">
+  <form id="gameForm">
+    <!-- Sample Field Structure -->
+    <div class="form-field">
+      <input type="text" id="teamName" placeholder="Team Name" />
+      <button type="button" onclick="validateField('teamName')">✔️</button>
+      <img id="icon-teamName" class="validation-icon" src="" style="display:none;" />
+    </div>
+
+    <!-- Repeat this block for other fields -->
+    <div class="form-field">
+      <input type="text" id="member1" placeholder="Member 1 Name" />
+      <button type="button" onclick="validateField('member1')">✔️</button>
+      <img id="icon-member1" class="validation-icon" src="" style="display:none;" />
+    </div>
+
+    <!-- Add 8 more fields as per your use case -->
+    <div class="form-field">
+      <input type="text" id="regNo" placeholder="Registration Number" />
+      <button type="button" onclick="validateField('regNo')">✔️</button>
+      <img id="icon-regNo" class="validation-icon" src="" style="display:none;" />
+    </div>
+
+    <!-- ... Add more inputs similarly ... -->
+
+    <!-- Final Submit Button -->
+    <button type="button" onclick="submitToGoogleForm()" style="margin-top: 20px;">🟥 Get Into Game 🟥</button>
+  </form>
+</div>
+
+
+
+      <div id="registerSuccessMessage" style="display: none; text-align: center; margin-top: 15px;">
+        <p style="color: #28a745; font-size: 1.2rem;">✅ Registration Started. Go Ahead!</p>
+      </div>
+    </div>
+
+    <!-- Countdown Timer -->
+    <p id="countdownTimer" style="font-size: 1rem; color: #ff004c; margin-top: 10px;"></p>
+  </main>
+
+  <!-- Popups -->
+  <div id="yesPopup" class="popup" style="display:none;">
+    <h2 class="popup-heading">You Survived!</h2>
+    <img src="yes.png" alt="Survived" class="popup-image" />
+  </div>
+
+  <div id="noPopup" class="popup" style="display:none;">
+    <h2 class="popup-heading">ELIMINATED</h2>
+    <img src="No-removebg-preview.png" alt="Eliminated" class="popup-image" />
+    <h1 id="eliminatedText" class="eliminated-text">ELIMINATED</h1>
+  </div>
+
+  <!-- Floating Shapes -->
+  <div class="shape circle">◯</div>
+  <div class="shape triangle">△</div>
+  <div class="shape square">▢</div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" src="Squid Game OST - Pink Soldiers (Extended Ver.).mp3" loop></audio>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>

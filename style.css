@@ -1,0 +1,613 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Orbitron', sans-serif;
+  color: #ff004c;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Fixed top logos */
+.top-left-logo, .top-right-logo {
+  position: relative;
+  top: 15px;
+  width: 80px;
+  height: auto;
+  z-index: 100;
+  user-select: none;
+}
+
+.top-left-logo {
+  left: 15px;
+}
+
+.top-right-logo {
+  right: 15px;
+}
+
+/* Fixed main event heading */
+.main-event-heading {
+  position: fixed;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.0rem;
+  color: #ff004c;
+  text-shadow: 0 0 12px #ff66aa, 0 0 50px #ff004c;
+  z-index: 101;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Background fullscreen image with dark overlay */
+.fullscreen-image {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('image1.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.fullscreen-image::after {
+  content: "";
+  position: fixed;  /* change from absolute */
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 0;  /* lower than main content but above background */
+}
+
+
+/* Main content container */
+.overlay-content {
+  margin-top: 80px; /* leave space for fixed header */
+  flex-grow: 1;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  z-index: 10;
+  color: white;
+  user-select: none;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Title below gallery */
+.title {
+  font-size: 2rem;
+  margin: 30px 0 15px;
+  text-shadow: 0 0 15px #ff0055;
+}
+
+/* Speak button */
+#speakBtn {
+  background: linear-gradient(45deg, #ff004c, #ff3399, #ff004c);
+  background-size: 300% 300%;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 1.3rem;
+  border-radius: 15px;
+  cursor: pointer;
+  box-shadow: 0 0 20px #ff004c, 0 0 30px #ff3399 inset;
+  animation: pulseGradient 3s ease infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-shadow: 0 0 10px #ff66aa;
+  user-select: none;
+  max-width: 90vw;
+}
+
+#speakBtn:focus {
+  outline: 3px solid #ff3399;
+  outline-offset: 3px;
+}
+
+
+#speakBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px #ff66cc, 0 0 50px #ff3399 inset;
+  background-position: 100% 0;
+}
+
+@keyframes pulseGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Typing text style, multi-line wrap */
+.typing-text {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #ff004c;
+  white-space: normal; /* allow wrapping */
+  border-right: 3px solid #ff004c;
+  max-width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
+  animation: blink-caret 0.75s step-end infinite;
+  word-break: break-word;
+  user-select: text;
+}
+
+@keyframes blink-caret {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: #ff004c; }
+}
+
+/* Register Section Buttons Container */
+#registerSection {
+  margin-top: 30px;
+  color: #ff004c;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* Register Yes/No buttons */
+#registerSection button {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  min-width: 100px;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+#yesBtn {
+  background: #28a745;
+  color: white;
+}
+
+#yesBtn:hover {
+  background: #218838;
+}
+
+#noBtn {
+  background: #dc3545;
+  color: white;
+}
+
+#noBtn:hover {
+  background: #b02a37;
+}
+
+/* Register Further button container */
+/* Register Further Container */
+#registerFurtherContainer {
+  text-align: center;
+  margin-top: 30px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Register Button */
+#registerFurtherBtn {
+  background-color: #ff004c;
+  color: white;
+  padding: 12px 24px;                 /* Ensures spacing inside the button */
+  text-align: center;                 /* Horizontally center the text */
+  display: inline-flex;              /* Allows vertical alignment */
+  align-items: center;               /* Vertically center the text */
+  justify-content: center;           /* Horizontally center inside flex */
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+
+#registerFurtherBtn:hover {
+  background-color: #cc003d;
+}
+
+/* Form Container */
+#registrationForm {
+  margin-top: 25px;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 10px rgba(255, 0, 76, 0.5);
+}
+
+/* Each Field Row */
+.form-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+/* Input Field */
+.form-field input {
+  flex: 1;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid #ff004c;
+  border-radius: 6px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.form-field input::placeholder {
+  color: #ccc;
+}
+
+.form-field input:focus {
+  border-color: #28a745;
+}
+
+/* Tick Button */
+.form-field button {
+  background-color: #28a745;
+  border: none;
+  padding: 8px 12px;
+  margin-left: 10px;
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.form-field button:hover {
+  background-color: #218838;
+}
+
+/* Validation Icons */
+.validation-icon {
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+  transition: opacity 0.3s ease;
+}
+
+/* Final Submit Button */
+#gameForm > button {
+  margin-top: 20px;
+  background-color: #ff004c;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#gameForm > button:hover {
+  background-color: #cc003d;
+}
+
+/* Success Message */
+#registerSuccessMessage p {
+  color: #28a745;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Countdown timer */
+#countdownTimer {
+  font-size: 1rem;
+  color: #ff004c;
+  margin-top: 10px;
+}
+
+/* Popups */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1100;
+  max-width: 90vw;
+  max-height: 80vh;
+  background: transparent;
+  border-radius: 15px;
+  text-align: center;
+  color: white;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.popup-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+  user-select: none;
+}
+
+.popup-heading {
+  font-size: 2rem;
+  text-shadow: 0 0 8px #ff004c;
+  user-select: none;
+}
+
+.popup-button {
+  background-color: #28a745;
+  border: none;
+  color: white;
+  font-size: 1.3rem;
+  padding: 10px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 15px #28a745;
+  user-select: none;
+  transition: background-color 0.3s ease;
+  width: 80%;
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+.popup-button:hover {
+  background-color: #218838;
+}
+
+/* Blurred background except popup */
+.blur-background > *:not(.popup) {
+  filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Eliminated blinking text */
+.eliminated-text {
+  color: #ff0000;
+  font-size: 3rem;
+  margin-top: 10px;
+  animation: blink 1s infinite;
+  user-select: none;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Red background blink */
+.red-blink {
+  animation: redBlinkBackground 1s infinite;
+}
+
+@keyframes redBlinkBackground {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: rgba(255, 0, 0, 0.4); }
+}
+
+/* Floating Squid Game shapes */
+.shape {
+  position: fixed;
+  font-size: 4rem;
+  color: #ff0055;
+  opacity: 0.1;
+  animation: floatShape 6s infinite ease-in-out;
+  user-select: none;
+  z-index: 5;
+}
+
+.shape.circle {
+  top: 10%;
+  left: 10%;
+}
+
+.shape.triangle {
+  bottom: 15%;
+  right: 10%;
+}
+
+.shape.square {
+  top: 50%;
+  right: 15%;
+  transform: translateY(-50%);
+}
+
+@keyframes floatShape {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Squid Game Gallery */
+.squid-game-gallery {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  z-index: 15;
+  position: relative;
+  max-width: 100%;
+}
+
+/* Animated images */
+.animated-image {
+  width: 22vw;
+  max-width: 250px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #ff004c, 0 0 10px #ff3399 inset;
+  animation: floatScale 6s ease-in-out infinite;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  user-select: none;
+  padding: 10px;
+}
+
+.animated-image:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 30px #ff66cc, 0 0 40px #ff3399 inset;
+}
+
+/* Float and scale animation */
+@keyframes floatScale {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-15px) scale(1.05);
+  }
+}
+
+/* Slide-in Animation for first image */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px) scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(10px) scale(1.02);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+  }
+}
+
+.slide-in {
+  animation: slideIn 1.5s ease-out forwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .top-left-logo, .top-right-logo {
+    width: 60px;
+    top: 10px;
+  }
+
+  .main-event-heading {
+    font-size: 1.4rem;
+    top: 10px;
+  }
+
+  #speakBtn {
+    font-size: 1.1rem;
+    padding: 12px 25px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    margin: 25px 0 10px;
+  }
+
+  .squid-game-gallery {
+    gap: 10px;
+  }
+
+  .animated-image {
+    width: 40vw;
+    max-width: 180px;
+    height: auto;
+  }
+
+  #registerSection button {
+    min-width: 90px;
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  #registerFurtherBtn {
+    font-size: 1.1rem;
+    padding: 10px 25px;
+    max-width: 200px;
+  }
+
+  .typing-text {
+    font-size: 1rem;
+    max-width: 95vw;
+  }
+}
+
+@media (max-width: 400px) {
+  .animated-image {
+    width: 90vw;
+    max-width: none;
+  }
+  
+  #registerSection {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #registerSection button {
+    width: 100%;
+    max-width: none;
+  }
+
+  #registerFurtherBtn {
+    max-width: none;
+    width: 100%;
+  }
+
+  .main-event-heading {
+    white-space: normal;
+    padding: 0 10px;
+  }
+}
+
+#registerSuccessMessage {
+  animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
