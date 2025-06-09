@@ -17,7 +17,7 @@
   #header {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 60px;
+    height: 70px;
     background: #111;
     border-bottom: 3px solid #ff004c;
     display: flex;
@@ -36,10 +36,11 @@
   }
   #inputContainer {
     position: fixed;
-    top: 65px;
+    top: 75px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
+    overflow: auto;
   }
   #playerInput {
     font-size: 1.2rem;
@@ -101,7 +102,7 @@
 <div id="header">SQUIDCRAFT</div>
 
 <div id="inputContainer">
-  <input type="number" id="playerInput" placeholder="Enter player number to eliminate" min="1" max="20" />
+  <input type="number" id="playerInput" placeholder="PlayerID" min="1" max="20" />
 </div>
 
 <div id="playerGrid"></div>
@@ -234,61 +235,73 @@
   });
 
   function highlightAndEliminate(num) {
-    const tile = tiles.find(t => t.el.dataset.player == num);
-    if(!tile) return;
+  const tile = tiles.find(t => t.el.dataset.player == num);
+  if (!tile) return;
 
-    if(tile.el.classList.contains('eliminated') || tile.el.classList.contains('highlighted')) {
-      alert('Player #' + num + ' is already eliminated or in process!');
-      return;
+  if (tile.el.classList.contains('eliminated') || tile.el.classList.contains('highlighted')) {
+    alert(`Player #${num} is already eliminated or being eliminated!`);
+    return;
+  }
+
+  tile.el.classList.add('highlighted');
+
+  // Freeze movement
+  tile.pos.vx = 0;
+  tile.pos.vy = 0;
+
+  // Move to center of screen
+  const centerX = window.innerWidth / 2 - 60;
+  const centerY = window.innerHeight / 2 - 80;
+
+  tile.el.style.transition = 'all 1.2s ease';
+  tile.el.style.zIndex = 2000;
+  tile.el.style.left = `${centerX}px`;
+  tile.el.style.top = `${centerY}px`;
+  tile.el.style.transform = 'scale(4)';
+
+  // Speak elimination after slight delay
+  setTimeout(() => {
+    // Voice alert
+    if ('speechSynthesis' in window) {
+      const msg = new SpeechSynthesisUtterance(`Player ${num} eliminated`);
+      window.speechSynthesis.speak(msg);
     }
 
-    tile.el.classList.add('highlighted');
+    // Fade out
+    tile.el.style.transition = 'opacity 1s ease';
+    tile.el.style.opacity = '0';
 
-    // Stop floating animation by removing velocities
-    tile.pos.vx = 0;
-    tile.pos.vy = 0;
-
-    // Save original position to restore later (optional)
-    const origX = tile.pos.x;
-    const origY = tile.pos.y;
-
-    // Calculate center position for highlight
-    const centerX = (window.innerWidth / 2) - 60; // tile width / 2
-    const centerY = (window.innerHeight / 2) - 80; // tile height / 2
-
-    // Bring to front and animate to center & scale up
-    tile.el.style.transition = 'all 1.2s ease';
-    tile.el.style.zIndex = 2000;
-    tile.el.style.left = centerX + 'px';
-    tile.el.style.top = centerY + 'px';
-    tile.el.style.transform = 'scale(4)';
-
-    // After 1 second, fade out and eliminate
+    // Final elimination after fade
     setTimeout(() => {
-      tile.el.style.transition = 'opacity 1s ease';
-      tile.el.style.opacity = '0';
+      tile.el.style.display = 'none';
+      tile.el.classList.add('eliminated');
+      tile.el.classList.remove('highlighted');
+      tile.el.style.zIndex = '';
+      tile.el.style.transform = '';
+      tile.el.style.opacity = '';
+    }, 1500);
+  }, 1500);
 
-      // Voice alert
-      if('speechSynthesis' in window) {
-        const msg = new SpeechSynthesisUtterance(`Player ${num} eliminated`);
-        window.speechSynthesis.speak(msg);
-      }
+  // Push to Google Sheet
+  // Push to Google Sheet (CORS-safe using FormData)
+const form = new FormData();
+form.append("playerId", num);
+form.append("status", "Eliminated");
 
-      // After fade, hide and mark eliminated
-      setTimeout(() => {
-        tile.el.style.display = 'none';
-        tile.el.classList.add('eliminated');
-        tile.el.classList.remove('highlighted');
-        tile.el.style.zIndex = '';
-        tile.el.style.transform = '';
-        tile.el.style.opacity = '';
-        // Reset position (just in case)
-        tile.pos.x = origX;
-        tile.pos.y = origY;
-      }, 2000);
+fetch("https://script.google.com/macros/s/AKfycbyeUmcbHtgxw8oeizOStI_-HscPoyff8vJPqVBy7TcbFlKoNV5n-PNYM02q3c26Jjtu/exec", {
+  method: "POST",
+  body: form
+})
+.then(response => {
+  console.log("✅ Status update sent to Google Sheet.");
+})
+.catch(error => {
+  console.error("❌ Error sending to Google Sheet:", error);
+});
 
-    }, 2000);
-  }
+
+}
+
 
   window.addEventListener('resize', () => {
     const maxX = window.innerWidth - 140;
