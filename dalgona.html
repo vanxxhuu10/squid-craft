@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Squid Game Wheel</title>
+  <link rel="stylesheet" href="dalgona.css" />
+</head>
+<body>
+  <!-- Top Left EMC Logo -->
+  <img src="emc_logo-removebg-preview.png" class="top-left-logo" alt="EMC Logo" />
+
+  <!-- Event Heading -->
+  <h1 class="main-event-heading">⚪△DALGONA🔺☂️</h1>
+
+  <!-- Main App Section (No PIN Required) -->
+  <div id="mainApp">
+    <!-- Controls -->
+    <div class="controls">
+  <input type="number" id="playerId" placeholder="Player ID" />
+  <button id="spinBtn">🎯 Spin</button>
+  <button id="resetBtn">🧹 Reset</button>
+</div>
+
+<div class="wheel-wrapper">
+  <div class="wheel-container">
+    <canvas id="wheel" width="400" height="400"></canvas>
+  </div>
+  <div class="arrow-right"></div>
+</div>
+
+
+<table id="resultTable">
+  <thead><tr><th>Player ID</th><th>Shape</th></tr></thead>
+  <tbody></tbody>
+</table>
+  <script src="dalgona.js"></script>
+</body>
+</html>
