@@ -25,7 +25,7 @@ app.post('/upload', upload.single('screenshot'), async (req, res) => {
       service: 'gmail',
       auth: {
         user: 'srivastavavansh64@gmail.com',         // Replace with your Gmail
-        pass: 'VITChennai$123'                       // Use app-specific password
+        pass: 'odcp cyej bkvr uaku'                       // Use app-specific password
       }
     });
 
