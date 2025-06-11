@@ -1,15 +1,14 @@
-// ---------------------- Voice Announcement ----------------------
+// 🔊 Speak Function (Female Voice)
 function speak(text) {
   if ('speechSynthesis' in window) {
     const utterance = new SpeechSynthesisUtterance(text);
-    let voices = speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v =>
-      v.name.includes("Female") ||
-      v.name.includes("Google UK English Female") ||
+    const voices = window.speechSynthesis.getVoices();
+    const femaleVoice = voices.find(v => 
+      v.name.includes("Female") || 
+      v.name.includes("Google UK English Female") || 
       v.name.includes("Microsoft Zira")
     );
     if (femaleVoice) utterance.voice = femaleVoice;
-
     utterance.rate = 1;
     utterance.pitch = 1;
     utterance.volume = 1;
@@ -17,14 +16,12 @@ function speak(text) {
   }
 }
 
-// Ensure voices load on Chrome
+// 🔊 Preload Voices
 if (typeof speechSynthesis !== 'undefined') {
-  speechSynthesis.onvoiceschanged = () => {
-    speechSynthesis.getVoices();
-  };
+  speechSynthesis.onvoiceschanged = () => {};
 }
 
-// ---------------------- Background Sound ----------------------
+// 🔊 Background Sound
 const bgSound = new Audio('Squid Game OST - Pink Soldiers (Extended Ver.).mp3');
 bgSound.loop = true;
 bgSound.volume = 0.4;
@@ -32,10 +29,9 @@ bgSound.play().catch(() => {
   document.addEventListener('click', () => bgSound.play(), { once: true });
 });
 
-// ---------------------- Wheel Setup ----------------------
+// 🎯 Wheel Logic
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
-
 const shapes = ["Circle", "Star", "Triangle", "Umbrella"];
 const colors = ["#ff5e57", "#ffc048", "#32ff7e", "#18dcff"];
 const radius = 200;
@@ -56,7 +52,6 @@ function drawWheel() {
     ctx.fill();
     ctx.stroke();
 
-    // Text
     ctx.save();
     ctx.translate(200, 200);
     ctx.rotate(startAngle + anglePerShape / 2);
@@ -70,17 +65,57 @@ function drawWheel() {
 
 drawWheel();
 
-// ---------------------- Spin Button Logic ----------------------
-document.getElementById("spinBtn").addEventListener("click", () => {
-  const playerIdBox = document.getElementById("playerId");
-  const playerId = playerIdBox.value.trim();
+// ✅ Pin Input Logic
+const pinInput = document.getElementById("pinInput");
+const playerIdBox = document.getElementById("playerId");
+const resetBtn = document.getElementById("resetBtn");
+let pinVerified = false;
 
-  if (playerIdBox.disabled) {
-    return alert("Enter correct PIN to unlock Player ID");
+window.addEventListener("DOMContentLoaded", () => {
+  playerIdBox.disabled = true;
+  const stored = JSON.parse(localStorage.getItem("results") || "[]");
+  const tableBody = document.querySelector("#resultTable tbody");
+
+  if (stored.length > 0) {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${stored[0].playerId}</td><td>${stored[0].shape}</td>`;
+    tableBody.appendChild(row);
+    playerIdBox.value = stored[0].playerId;
+    playerIdBox.disabled = true;
   }
+});
 
-  if (!playerId) {
-    return alert("Enter Player ID");
+pinInput.addEventListener("input", function () {
+  if (this.value === "9590") {
+    pinVerified = true;
+    playerIdBox.disabled = false;
+    playerIdBox.focus();
+    pinInput.style.borderColor = "#00ff88";
+    pinInput.style.boxShadow = "0 0 15px #00ff88";
+    resetBtn.disabled = false;
+  } else {
+    pinVerified = false;
+    playerIdBox.disabled = true;
+    pinInput.style.borderColor = "rgba(255,255,255,0.2)";
+    pinInput.style.boxShadow = "none";
+    resetBtn.disabled = true;
+  }
+});
+
+// 🎰 Spin Button Logic
+document.getElementById("spinBtn").addEventListener("click", () => {
+  const playerId = playerIdBox.value.trim();
+  if (!playerId) return alert("Enter Player ID");
+
+  const stored = JSON.parse(localStorage.getItem("results") || "[]");
+  if (stored.length > 0) {
+    if (stored[0].playerId !== playerId) {
+      alert("You are only allowed to spin for your own Player ID.");
+      return;
+    } else {
+      alert("You have already spun the wheel.");
+      return;
+    }
   }
 
   const selectedIndex = Math.floor(Math.random() * shapes.length);
@@ -104,70 +139,50 @@ document.getElementById("spinBtn").addEventListener("click", () => {
       const shape = shapes[selectedIndex];
       addResultToTable(playerId, shape);
       speak(`Player ${playerId}, you are allotted ${shape}`);
+      sendToGoogleSheet(playerId, shape);
     }
   }
 
   requestAnimationFrame(animateSpin);
 });
 
-// ---------------------- Result Table ----------------------
+// 📋 Add Result to Table
 function addResultToTable(playerId, shape) {
   const tableBody = document.querySelector("#resultTable tbody");
+  tableBody.innerHTML = ""; // Ensure only one row
+
   const row = document.createElement("tr");
   row.innerHTML = `<td>${playerId}</td><td>${shape}</td>`;
   tableBody.appendChild(row);
 
-  let stored = JSON.parse(localStorage.getItem("results") || "[]");
-  stored.push({ playerId, shape });
-  fetch("https://script.google.com/macros/s/AKfycbyDaJPcWYkoNbjNujqvW1gHD579GMtg4CeDi_aPBGXK9knUKVntSiXwzPrbDbGlbAlvWg/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded"
-  },
-  body: new URLSearchParams({
-    path: "shape",
-    playerId: playerId,
-    shape: shape
-  })
-});
-
-  localStorage.setItem("results", JSON.stringify(stored));
+  localStorage.setItem("results", JSON.stringify([{ playerId, shape }]));
+  playerIdBox.disabled = true;
 }
 
-// ---------------------- Reset Button ----------------------
-document.getElementById("resetBtn").addEventListener("click", () => {
+// 📤 Send Data to Google Sheets
+function sendToGoogleSheet(playerId, shape) {
+  fetch("https://script.google.com/macros/s/YOUR_DEPLOYED_URL_HERE/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      path: "shape",
+      playerId: playerId,
+      shape: shape
+    })
+  });
+}
+
+// 🔁 Reset Button (Only if Pin is Verified)
+resetBtn.addEventListener("click", () => {
+  if (!pinVerified) {
+    alert("Enter correct pin to reset.");
+    return;
+  }
   localStorage.removeItem("results");
   document.querySelector("#resultTable tbody").innerHTML = "";
-});
-
-// ---------------------- PIN Box Unlock Logic ----------------------
-document.getElementById("pinInput").addEventListener("input", function () {
-  const pinBox = this;
-  const playerIdBox = document.getElementById("playerId");
-
-  if (pinBox.value === "9590") {
-    playerIdBox.disabled = false;
-    playerIdBox.focus();
-    pinBox.style.borderColor = "#00ff88";
-    pinBox.style.boxShadow = "0 0 15px #00ff88";
-  } else {
-    playerIdBox.disabled = true;
-    pinBox.style.borderColor = "rgba(255, 255, 255, 0.2)";
-    pinBox.style.boxShadow = "none";
-  }
-});
-
-// ---------------------- On Page Load ----------------------
-window.addEventListener("DOMContentLoaded", () => {
-  // Disable Player ID input initially
-  document.getElementById("playerId").disabled = true;
-
-  // Restore table from local storage
-  const tableBody = document.querySelector("#resultTable tbody");
-  const stored = JSON.parse(localStorage.getItem("results") || "[]");
-  for (const entry of stored) {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${entry.playerId}</td><td>${entry.shape}</td>`;
-    tableBody.appendChild(row);
-  }
+  playerIdBox.value = "";
+  playerIdBox.disabled = false;
+  alert("Reset successful.");
 });
