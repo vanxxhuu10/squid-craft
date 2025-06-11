@@ -153,7 +153,7 @@ function addResultToTable(playerId, shape) {
 
 // 📤 Send to Google Sheet
 function sendToGoogleSheet(playerId, shape) {
-  fetch("https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbyDaJPcWYkoNbjNujqvW1gHD579GMtg4CeDi_aPBGXK9knUKVntSiXwzPrbDbGlbAlvWg/exec", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
