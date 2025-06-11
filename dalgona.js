@@ -178,3 +178,28 @@ resetBtn.addEventListener("click", () => {
   playerIdBox.value = "";
   alert("Reset successful.");
 });
+
+document.getElementById('sendScreenshotBtn').addEventListener('click', async () => {
+    const fileInput = document.getElementById('screenshotInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+      alert('Please select an image first.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('screenshot', file);
+
+    try {
+      const response = await fetch('https://squid-craft.onrender.com/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById('uploadStatus').textContent = result.message;
+    } catch (error) {
+      document.getElementById('uploadStatus').textContent = 'Error sending screenshot.';
+    }
+  });
