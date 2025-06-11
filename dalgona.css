@@ -422,3 +422,29 @@
 #pinInput::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
+
+#screenshotUploadBox {
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 20px;
+  width: clamp(280px, 80%, 600px);
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 0, 68, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+#screenshotUploadBox input[type="file"] {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-family: 'Orbitron', monospace;
+  color: #fff;
+}
+
+#uploadStatus {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #0f0;
+}
