@@ -4,6 +4,15 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const path = require('path');
+
+// Serve static files from "public" folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve index.html by default on root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
