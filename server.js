@@ -11,7 +11,7 @@ const upload = multer({ dest: 'uploads/' });
 app.use(cors());
 
 // Serve static files from "public" folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'index.html')));
 
 // Serve index.html on root path
 app.get('/', (req, res) => {
