@@ -1,11 +1,11 @@
-// 🔊 Speak Function (Female Voice)
+// 🔊 Speak Function
 function speak(text) {
   if ('speechSynthesis' in window) {
     const utterance = new SpeechSynthesisUtterance(text);
     const voices = window.speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v => 
-      v.name.includes("Female") || 
-      v.name.includes("Google UK English Female") || 
+    const femaleVoice = voices.find(v =>
+      v.name.includes("Female") ||
+      v.name.includes("Google UK English Female") ||
       v.name.includes("Microsoft Zira")
     );
     if (femaleVoice) utterance.voice = femaleVoice;
@@ -16,11 +16,6 @@ function speak(text) {
   }
 }
 
-// 🔊 Preload Voices
-if (typeof speechSynthesis !== 'undefined') {
-  speechSynthesis.onvoiceschanged = () => {};
-}
-
 // 🔊 Background Sound
 const bgSound = new Audio('Squid Game OST - Pink Soldiers (Extended Ver.).mp3');
 bgSound.loop = true;
@@ -29,7 +24,7 @@ bgSound.play().catch(() => {
   document.addEventListener('click', () => bgSound.play(), { once: true });
 });
 
-// 🎯 Wheel Logic
+// 🎯 Wheel Drawing
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 const shapes = ["Circle", "Star", "Triangle", "Umbrella"];
@@ -65,52 +60,52 @@ function drawWheel() {
 
 drawWheel();
 
-// ✅ Pin Input Logic
+// ✅ DOM Elements
 const pinInput = document.getElementById("pinInput");
 const playerIdBox = document.getElementById("playerId");
+const spinBtn = document.getElementById("spinBtn");
 const resetBtn = document.getElementById("resetBtn");
+const tableBody = document.querySelector("#resultTable tbody");
+
 let pinVerified = false;
 
+// 🔁 Load Existing Data on Page Load
 window.addEventListener("DOMContentLoaded", () => {
-  playerIdBox.disabled = true;
   const stored = JSON.parse(localStorage.getItem("results") || "[]");
-  const tableBody = document.querySelector("#resultTable tbody");
-
   if (stored.length > 0) {
+    const { playerId, shape } = stored[0];
     const row = document.createElement("tr");
-    row.innerHTML = `<td>${stored[0].playerId}</td><td>${stored[0].shape}</td>`;
+    row.innerHTML = `<td>${playerId}</td><td>${shape}</td>`;
     tableBody.appendChild(row);
-    playerIdBox.value = stored[0].playerId;
+    playerIdBox.value = playerId;
     playerIdBox.disabled = true;
   }
 });
 
+// ✅ Pin Validation for Reset
 pinInput.addEventListener("input", function () {
   if (this.value === "9590") {
     pinVerified = true;
-    playerIdBox.disabled = false;
-    playerIdBox.focus();
     pinInput.style.borderColor = "#00ff88";
     pinInput.style.boxShadow = "0 0 15px #00ff88";
     resetBtn.disabled = false;
   } else {
     pinVerified = false;
-    playerIdBox.disabled = true;
     pinInput.style.borderColor = "rgba(255,255,255,0.2)";
     pinInput.style.boxShadow = "none";
     resetBtn.disabled = true;
   }
 });
 
-// 🎰 Spin Button Logic
-document.getElementById("spinBtn").addEventListener("click", () => {
+// 🎰 Spin Button
+spinBtn.addEventListener("click", () => {
   const playerId = playerIdBox.value.trim();
   if (!playerId) return alert("Enter Player ID");
 
   const stored = JSON.parse(localStorage.getItem("results") || "[]");
   if (stored.length > 0) {
     if (stored[0].playerId !== playerId) {
-      alert("You are only allowed to spin for your own Player ID.");
+      alert("Only one attempt allowed per device. You can't change Player ID.");
       return;
     } else {
       alert("You have already spun the wheel.");
@@ -146,22 +141,19 @@ document.getElementById("spinBtn").addEventListener("click", () => {
   requestAnimationFrame(animateSpin);
 });
 
-// 📋 Add Result to Table
+// 📋 Add Result to Table and Store
 function addResultToTable(playerId, shape) {
-  const tableBody = document.querySelector("#resultTable tbody");
-  tableBody.innerHTML = ""; // Ensure only one row
-
+  tableBody.innerHTML = ""; // Only 1 row allowed
   const row = document.createElement("tr");
   row.innerHTML = `<td>${playerId}</td><td>${shape}</td>`;
   tableBody.appendChild(row);
-
   localStorage.setItem("results", JSON.stringify([{ playerId, shape }]));
   playerIdBox.disabled = true;
 }
 
-// 📤 Send Data to Google Sheets
+// 📤 Send to Google Sheet
 function sendToGoogleSheet(playerId, shape) {
-  fetch("https://script.google.com/macros/s/YOUR_DEPLOYED_URL_HERE/exec", {
+  fetch("https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
@@ -174,15 +166,15 @@ function sendToGoogleSheet(playerId, shape) {
   });
 }
 
-// 🔁 Reset Button (Only if Pin is Verified)
+// 🔁 Reset (Requires Correct Pin)
 resetBtn.addEventListener("click", () => {
   if (!pinVerified) {
     alert("Enter correct pin to reset.");
     return;
   }
   localStorage.removeItem("results");
-  document.querySelector("#resultTable tbody").innerHTML = "";
-  playerIdBox.value = "";
+  tableBody.innerHTML = "";
   playerIdBox.disabled = false;
+  playerIdBox.value = "";
   alert("Reset successful.");
 });
