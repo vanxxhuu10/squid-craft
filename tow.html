@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Team Divider</title>
+  <link rel="stylesheet" href="tow.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>Team Divider</h2>
+
+    <div class="input-section">
+      <label>Total Players: <input type="number" id="totalPlayers" min="2" step="2" /></label>
+      <button onclick="setupTeams()">Generate Teams</button>
+    </div>
+
+    <div id="teamContainer" class="team-container hidden">
+      <div class="team-box" id="leftTeam"><h3>Left Team</h3></div>
+      <div class="team-box" id="rightTeam"><h3>Right Team</h3></div>
+    </div>
+
+    <div class="player-input hidden">
+      <input type="text" id="playerId" placeholder="Enter Player ID" />
+      <button onclick="assignTeam()">Decide Team</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Player ID</th><th>Team Side</th></tr>
+      </thead>
+      <tbody id="teamTableBody"></tbody>
+    </table>
+  </div>
+
+  <script src="tow.js"></script>
+</body>
+</html>

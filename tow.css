@@ -1,0 +1,396 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Comic+Neue:wght@400;700&display=swap');
+    
+    :root {
+      --left-team-color: #ff6b6b;
+      --right-team-color: #4ecdc4;
+      --rope-color: #8b4513;
+      --grass-color: #2ecc71;
+      --sky-color: #87ceeb;
+      --dirt-color: #d2691e;
+      --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Comic Neue', cursive;
+      background: linear-gradient(to bottom, var(--sky-color) 0%, var(--grass-color) 60%, var(--dirt-color) 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated clouds */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 10%;
+      left: -10%;
+      width: 120%;
+      height: 200px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><circle cx="20" cy="10" r="8" fill="white" opacity="0.8"/><circle cx="25" cy="8" r="6" fill="white" opacity="0.6"/><circle cx="15" cy="12" r="5" fill="white" opacity="0.7"/><circle cx="70" cy="15" r="7" fill="white" opacity="0.5"/><circle cx="75" cy="12" r="5" fill="white" opacity="0.6"/><circle cx="85" cy="8" r="6" fill="white" opacity="0.4"/></svg>') repeat-x;
+      animation: cloudFloat 30s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes cloudFloat {
+      0% { transform: translateX(-100px); }
+      100% { transform: translateX(100px); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 3em;
+      text-align: center;
+      color: #fff;
+      text-shadow: 3px 3px 0px #333, 6px 6px 10px var(--shadow-color);
+      margin-bottom: 30px;
+      animation: titleBounce 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleBounce {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-10px); }
+    }
+
+    .input-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 8px 32px var(--shadow-color);
+      backdrop-filter: blur(10px);
+      border: 3px solid #fff;
+      animation: slideInFromTop 0.8s ease-out;
+    }
+
+    @keyframes slideInFromTop {
+      0% { transform: translateY(-50px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .input-section label {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #333;
+      margin-right: 15px;
+    }
+
+    #totalPlayers {
+      padding: 12px 20px;
+      font-size: 1.2em;
+      border: 3px solid #ddd;
+      border-radius: 25px;
+      margin: 0 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    #totalPlayers:focus {
+      outline: none;
+      border-color: var(--rope-color);
+      box-shadow: 0 0 15px rgba(139, 69, 19, 0.3);
+      transform: scale(1.05);
+    }
+
+    button {
+      background: linear-gradient(45deg, var(--rope-color), #a0522d);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px var(--shadow-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.5s ease;
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px var(--shadow-color);
+    }
+
+    button:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .team-container {
+      display: flex;
+      justify-content: space-between;
+      margin: 40px 0;
+      position: relative;
+      animation: slideInFromSides 1s ease-out;
+    }
+
+    @keyframes slideInFromSides {
+      0% { 
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      100% { 
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Rope in the middle */
+    .team-container::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 20px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--rope-color) 0px,
+        var(--rope-color) 10px,
+        #654321 10px,
+        #654321 20px
+      );
+      border-radius: 10px;
+      box-shadow: 0 5px 15px var(--shadow-color);
+      animation: ropeSwing 3s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    @keyframes ropeSwing {
+      0%, 100% { transform: translate(-50%, -50%) rotate(-2deg); }
+      50% { transform: translate(-50%, -50%) rotate(2deg); }
+    }
+
+    .team-box {
+      width: 45%;
+      min-height: 200px;
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      position: relative;
+      border: 4px solid #fff;
+      box-shadow: 0 10px 30px var(--shadow-color);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .team-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: teamGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes teamGlow {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+    }
+
+    #leftTeam {
+      background: linear-gradient(135deg, var(--left-team-color), #ff5252);
+      animation: teamPulseLeft 2s ease-in-out infinite alternate;
+    }
+
+    #rightTeam {
+      background: linear-gradient(135deg, var(--right-team-color), #26a69a);
+      animation: teamPulseRight 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes teamPulseLeft {
+      0% { transform: translateX(0px) scale(1); }
+      100% { transform: translateX(-5px) scale(1.02); }
+    }
+
+    @keyframes teamPulseRight {
+      0% { transform: translateX(0px) scale(1); }
+      100% { transform: translateX(5px) scale(1.02); }
+    }
+
+    .team-box h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2em;
+      color: white;
+      text-shadow: 2px 2px 4px var(--shadow-color);
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .team-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px var(--shadow-color);
+    }
+
+    .player-input {
+      text-align: center;
+      margin: 30px 0;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      0% { transform: translateY(30px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    #playerId {
+      padding: 15px 25px;
+      font-size: 1.3em;
+      border: 3px solid #ddd;
+      border-radius: 25px;
+      margin-right: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    #playerId:focus {
+      outline: none;
+      border-color: var(--rope-color);
+      box-shadow: 0 0 20px rgba(139, 69, 19, 0.4);
+      transform: scale(1.05);
+    }
+
+    table {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px var(--shadow-color);
+      animation: tableSlideIn 1s ease-out;
+    }
+
+    @keyframes tableSlideIn {
+      0% { transform: translateY(50px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    thead {
+      background: linear-gradient(45deg, var(--rope-color), #a0522d);
+      color: white;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    tbody tr {
+      transition: all 0.3s ease;
+      animation: rowFadeIn 0.5s ease-out forwards;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    @keyframes rowFadeIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    tbody tr:hover {
+      background: rgba(139, 69, 19, 0.1);
+      transform: scale(1.02);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Player entries animation */
+    .player-entry {
+      animation: playerEnter 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes playerEnter {
+      0% {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .team-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .team-box {
+        width: 100%;
+      }
+      
+      .team-container::before {
+        width: 80%;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(90deg);
+      }
+      
+      h2 {
+        font-size: 2em;
+      }
+      
+      #playerId {
+        margin-bottom: 15px;
+        margin-right: 0;
+      }
+    }
+
+    /* Success animation */
+    @keyframes successPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .success-animation {
+      animation: successPulse 0.5s ease-in-out;
+    }
