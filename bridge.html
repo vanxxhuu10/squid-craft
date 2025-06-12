@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Glass Bridge Order Allotment</title>
+  <link rel="stylesheet" href="tugofwar.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🟥 Glass Bridge Order Allotment</h1>
+
+    <div class="input-section">
+      <label for="totalPlayers">Enter Total Players:</label>
+      <input type="number" id="totalPlayers" min="2" max="100">
+      <button onclick="generateWheel()">Generate Wheel</button>
+    </div>
+
+    <div class="input-section">
+      <label for="playerId">Enter Player ID:</label>
+      <input type="text" id="playerId">
+      <button onclick="spinWheel()">Spin the Wheel</button>
+    </div>
+
+    <div class="wheel-wrapper">
+  <canvas id="wheelCanvas" width="400" height="400"></canvas>
+  <div class="arrow">◀</div>
+</div>
+
+
+
+
+    <h2>📝 Allotment Table</h2>
+    <table id="allotmentTable">
+      <thead>
+        <tr>
+          <th>Player ID</th>
+          <th>Allotted Number</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button class="reset-btn" onclick="resetGame()">🔁 Reset</button>
+  </div>
+
+  <script src="tugofwar.js"></script>
+</body>
+</html>
