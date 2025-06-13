@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Squid Game Portal</title>
+  <title>Squid Game - Minecraft Edition</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Top Logos -->
-  <img src="emc_logo-removebg-preview.png" alt="EMC Logo" class="top-left-logo" />
-
-  <!-- Heading -->
-  <h1 class="main-event-heading">SQUIDCRAFT</h1>
+  <!-- Top Logo -->
+  <div class="top-bar">
+  <img src="emc_logo-removebg-preview.png" alt="Logo" class="top-logo">
+  <h1 class="main-event-heading">Squid Game - Minecraft Edition</h1>
+</div>
 
   <!-- Fullscreen Background -->
   <div class="fullscreen-image"></div>
@@ -36,44 +36,16 @@
       <button id="noBtn" class="register-no" type="button">No</button>
     </div>
 
-    <!-- Further Registration Button -->
-    <div id="registerFurtherContainer" style="align-self: center; text-align:center; margin-top: 20px; display:none;">
+    <!-- Register Button & Success Message -->
+    <div id="registerFurtherContainer" style="text-align: center; margin-top: 20px; display: none;">
       <button id="registerFurtherBtn" class="popup-button" type="button">REGISTER</button>
-      
-      <div id="registrationForm" style="display: none; margin-top: 20px;">
-  <form id="gameForm">
-    <!-- Sample Field Structure -->
-    <div class="form-field">
-      <input type="text" id="teamName" placeholder="Team Name" />
-      <button type="button" onclick="validateField('teamName')">✔️</button>
-      <img id="icon-teamName" class="validation-icon" src="" style="display:none;" />
-    </div>
 
-    <!-- Repeat this block for other fields -->
-    <div class="form-field">
-      <input type="text" id="member1" placeholder="Member 1 Name" />
-      <button type="button" onclick="validateField('member1')">✔️</button>
-      <img id="icon-member1" class="validation-icon" src="" style="display:none;" />
-    </div>
-
-    <!-- Add 8 more fields as per your use case -->
-    <div class="form-field">
-      <input type="text" id="regNo" placeholder="Registration Number" />
-      <button type="button" onclick="validateField('regNo')">✔️</button>
-      <img id="icon-regNo" class="validation-icon" src="" style="display:none;" />
-    </div>
-
-    <!-- ... Add more inputs similarly ... -->
-
-    <!-- Final Submit Button -->
-    <button type="button" onclick="submitToGoogleForm()" style="margin-top: 20px;">🟥 Get Into Game 🟥</button>
-  </form>
-</div>
-
-
-
-      <div id="registerSuccessMessage" style="display: none; text-align: center; margin-top: 15px;">
+      <div id="registerSuccessMessage" style="display: none; margin-top: 20px;">
         <p style="color: #28a745; font-size: 1.2rem;">✅ Registration Started. Go Ahead!</p>
+        <a id="goToFormBtn" href="https://forms.gle/wq7do4ncdPCNAB2d6" target="_blank"
+           class="go-to-form-button">
+          Go to Form
+        </a>
       </div>
     </div>
 
@@ -101,7 +73,7 @@
   <!-- Background Music -->
   <audio id="bgMusic" src="Squid Game OST - Pink Soldiers (Extended Ver.).mp3" loop></audio>
 
-  <!-- Script -->
+  <!-- JS -->
   <script src="script.js"></script>
 </body>
 </html>
