@@ -2,12 +2,26 @@ const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const fetch = require('node-fetch'); // <-- simple require
+const path = require('path'); // ✅ for file paths
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
+
+if (!PORT) {
+  throw new Error('❌ PORT environment variable is missing!');
+}
 
 app.use(cors());
 
+// ✅ Serve static files from the "public" folder
+app.use(express.static(path.join(__dirname)));
+
+// ✅ If user goes to "/", send the index.html file
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ✅ Multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
