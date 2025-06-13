@@ -6,9 +6,21 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* Fullscreen Background Image */
+.fullscreen-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('image1.jpeg') no-repeat center center;
+  background-size: cover;
+  z-index: -1; /* behind everything */
+  filter: brightness(0.4); /* optional: darken for readability */
+}
 
 body {
-  background: black;
+  /* background: black; */
   color: #fff;
   font-family: 'Orbitron', sans-serif;
   overflow-x: hidden;
@@ -42,27 +54,18 @@ body {
   font-family: 'Creepster', cursive;
   font-size: 4rem;
   font-weight: 900;
-  color: #fff;
-  white-space: nowrap; /* ❗️ prevents wrap */
-  text-shadow:
-    0 0 5px #fff,
-    0 0 15px #fff,
-    0 0 30px #ff0055,
-    0 0 50px #ff0055,
-    2px 2px 10px rgba(0, 0, 0, 0.8),
-    -2px -2px 10px rgba(0, 0, 0, 0.8);
-  opacity: 0;
-  animation:
-    titleReveal 1ms ease-out 1s forwards,
-    titlePulse 2s ease-in-out infinite 4s,
-    titleGlitch 2s ease-in-out infinite 6s;
+  color: #fff;  /* plain white */
+  white-space: nowrap; /* keep in one line */
+  opacity: 1;  /* visible immediately */
+  /* No text-shadow, no animation */
 }
+
 
 /* === FULLSCREEN BACKGROUND === */
 .fullscreen-image {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: url('your-background.jpg') center/cover no-repeat;
+  background: url('image1.jpeg') center/cover no-repeat;
   filter: brightness(0.3);
   z-index: -1;
 }
