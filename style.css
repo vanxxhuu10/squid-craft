@@ -273,29 +273,47 @@ button:focus {
   }
 
   .top-bar {
-    height: 80px;
-  }
+  position: relative;  /* container for absolute logo */
+  height: auto;        /* allow height to grow naturally */
+  text-align: center;  /* center heading */
+  padding-top: 20px;   /* top space for logo */
+  padding-bottom: 10px; /* bottom space for heading */
+}
 
+.top-logo {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 80px;  /* bigger logo for phone */
+}
+
+.main-event-heading {
+  margin-top: 100px;    /* push heading below logo */
+  font-size: 1.8rem;    /* slightly smaller for phone */
+  width: 90%;
+  text-align: center;
+}
+
+.overlay-content {
+  margin-top: 200px;   /* push page content below heading + logo */
+  padding: 0 20px;
+}
+
+/* Optional: tweak for larger screens */
+@media (min-width: 768px) {
   .top-logo {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 60px; /* bigger logo */
+    height: 120px;
   }
 
   .main-event-heading {
-    position: relative;
-    margin-top: 70px;   /* smaller gap below logo */
-    font-size: 2rem;
-    width: 90%;
-    text-align: center;
+    font-size: 2.5rem;
   }
 
   .overlay-content {
-    margin-top: 180px; /* adjust content position below heading */
-    padding: 0 20px;
+    margin-top: 250px;
   }
+}
 
   .animated-image {
     max-width: 150px; /* smaller gallery images for mobile */
