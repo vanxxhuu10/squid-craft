@@ -1,22 +1,12 @@
-// 🔊 Speak Function
+// ✅ Speak
 function speak(text) {
   if ('speechSynthesis' in window) {
     const utterance = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v =>
-      v.name.includes("Female") ||
-      v.name.includes("Google UK English Female") ||
-      v.name.includes("Microsoft Zira")
-    );
-    if (femaleVoice) utterance.voice = femaleVoice;
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
     window.speechSynthesis.speak(utterance);
   }
 }
 
-// 🔊 Background Sound
+// ✅ Background sound
 const bgSound = new Audio('Squid Game OST - Pink Soldiers (Extended Ver.).mp3');
 bgSound.loop = true;
 bgSound.volume = 0.4;
@@ -24,7 +14,7 @@ bgSound.play().catch(() => {
   document.addEventListener('click', () => bgSound.play(), { once: true });
 });
 
-// 🎯 Wheel Drawing
+// ✅ Wheel & spin
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
 const shapes = ["Circle", "Star", "Triangle", "Umbrella"];
@@ -60,7 +50,6 @@ function drawWheel() {
 
 drawWheel();
 
-// ✅ DOM Elements
 const pinInput = document.getElementById("pinInput");
 const playerIdBox = document.getElementById("playerId");
 const spinBtn = document.getElementById("spinBtn");
@@ -69,48 +58,34 @@ const tableBody = document.querySelector("#resultTable tbody");
 
 let pinVerified = false;
 
-// 🔁 Load Existing Data on Page Load
 window.addEventListener("DOMContentLoaded", () => {
   const stored = JSON.parse(localStorage.getItem("results") || "[]");
   if (stored.length > 0) {
     const { playerId, shape } = stored[0];
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${playerId}</td><td>${shape}</td>`;
-    tableBody.appendChild(row);
+    addResultToTable(playerId, shape);
     playerIdBox.value = playerId;
     playerIdBox.disabled = true;
   }
 });
 
-// ✅ Pin Validation for Reset
 pinInput.addEventListener("input", function () {
   if (this.value === "9590") {
     pinVerified = true;
-    pinInput.style.borderColor = "#00ff88";
-    pinInput.style.boxShadow = "0 0 15px #00ff88";
     resetBtn.disabled = false;
   } else {
     pinVerified = false;
-    pinInput.style.borderColor = "rgba(255,255,255,0.2)";
-    pinInput.style.boxShadow = "none";
     resetBtn.disabled = true;
   }
 });
 
-// 🎰 Spin Button
 spinBtn.addEventListener("click", () => {
   const playerId = playerIdBox.value.trim();
   if (!playerId) return alert("Enter Player ID");
 
   const stored = JSON.parse(localStorage.getItem("results") || "[]");
-  if (stored.length > 0) {
-    if (stored[0].playerId !== playerId) {
-      alert("Only one attempt allowed per device. You can't change Player ID.");
-      return;
-    } else {
-      alert("You have already spun the wheel.");
-      return;
-    }
+  if (stored.length > 0 && stored[0].playerId !== playerId) {
+    alert("Only one attempt allowed per device.");
+    return;
   }
 
   const selectedIndex = Math.floor(Math.random() * shapes.length);
@@ -133,17 +108,16 @@ spinBtn.addEventListener("click", () => {
     } else {
       const shape = shapes[selectedIndex];
       addResultToTable(playerId, shape);
-      speak(`Player ${playerId}, you are allotted ${shape}`);
-      sendToGoogleSheet(playerId, shape);
+      speak(`Player ${playerId}, you got ${shape}`);
+      sendToGoogleSheet(playerId, shape, "");
     }
   }
 
   requestAnimationFrame(animateSpin);
 });
 
-// 📋 Add Result to Table and Store
 function addResultToTable(playerId, shape) {
-  tableBody.innerHTML = ""; // Only 1 row allowed
+  tableBody.innerHTML = "";
   const row = document.createElement("tr");
   row.innerHTML = `<td>${playerId}</td><td>${shape}</td>`;
   tableBody.appendChild(row);
@@ -151,22 +125,19 @@ function addResultToTable(playerId, shape) {
   playerIdBox.disabled = true;
 }
 
-// 📤 Send to Google Sheet
-function sendToGoogleSheet(playerId, shape) {
-  fetch("https://script.google.com/macros/s/AKfycbyDaJPcWYkoNbjNujqvW1gHD579GMtg4CeDi_aPBGXK9knUKVntSiXwzPrbDbGlbAlvWg/exec", {
+function sendToGoogleSheet(playerId, shape, link) {
+  fetch("https://script.google.com/macros/s/AKfycbzUX_XuNhTqIJ3tKEXokr_ugr7ZekhbGCC6tNBxV7hc5G03jBuFVITrIVIEpJzGmALEuw/exec", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       path: "shape",
       playerId: playerId,
-      shape: shape
+      shape: shape,
+      link: link || ""
     })
   });
 }
 
-// 🔁 Reset (Requires Correct Pin)
 resetBtn.addEventListener("click", () => {
   if (!pinVerified) {
     alert("Enter correct pin to reset.");
@@ -176,30 +147,50 @@ resetBtn.addEventListener("click", () => {
   tableBody.innerHTML = "";
   playerIdBox.disabled = false;
   playerIdBox.value = "";
-  alert("Reset successful.");
+  alert("Reset done!");
 });
 
 document.getElementById('sendScreenshotBtn').addEventListener('click', async () => {
-    const fileInput = document.getElementById('screenshotInput');
-    const file = fileInput.files[0];
+  const fileInput = document.getElementById('screenshotInput');
+  const file = fileInput.files[0];
+  const playerId = document.getElementById('playerId').value.trim();
 
-    if (!file) {
-      alert('Please select an image first.');
-      return;
+  if (!file) {
+    alert('Please select an image file to upload.');
+    return;
+  }
+  if (!playerId) {
+    alert('Please enter your Player ID.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('screenshot', file);
+  formData.append('playerId', playerId);
+
+  try {
+    // 🔗 Send to your Node.js server (/upload)
+    const response = await fetch('http://localhost:3000/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+
+    // ✅ Show status
+    document.getElementById('uploadStatus').textContent = result.message;
+
+    // 🔗 Optional: save to Google Sheet if needed
+    const stored = JSON.parse(localStorage.getItem('results') || '[]');
+    const shape = stored.length > 0 ? stored[0].shape : '';
+
+    if (result.success && result.link) {
+      sendToGoogleSheet(playerId, shape, result.link);
     }
 
-    const formData = new FormData();
-    formData.append('screenshot', file);
+  } catch (err) {
+    console.error('❌ Upload failed:', err);
+    document.getElementById('uploadStatus').textContent = '❌ Failed to upload screenshot.';
+  }
+});
 
-    try {
-      const response = await fetch('https://squid-craft.onrender.com/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      const result = await response.json();
-      document.getElementById('uploadStatus').textContent = result.message;
-    } catch (error) {
-      document.getElementById('uploadStatus').textContent = 'Error sending screenshot.';
-    }
-  });

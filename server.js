@@ -1,57 +1,49 @@
 const express = require('express');
 const multer = require('multer');
-const nodemailer = require('nodemailer');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+const fetch = require('node-fetch'); // <-- simple require
 
 const app = express();
-const upload = multer({ dest: 'uploads/' });
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Serve static files from "public" folder
-app.use(express.static(path.join(__dirname)));
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-// Serve index.html on root path
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Screenshot upload and email route
 app.post('/upload', upload.single('screenshot'), async (req, res) => {
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'srivastavavansh64@gmail.com',         // Replace with your Gmail
-        pass: 'odcp cyej bkvr uaku'                       // Use app-specific password
-      }
+    const playerId = req.body.playerId;
+    const file = req.file;
+
+    if (!playerId || !file) {
+      return res.status(400).json({ success: false, message: '❌ Missing playerId or file.' });
+    }
+
+    const mimeType = file.mimetype;
+    const base64 = `data:${mimeType};base64,${file.buffer.toString('base64')}`;
+
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzUX_XuNhTqIJ3tKEXokr_ugr7ZekhbGCC6tNBxV7hc5G03jBuFVITrIVIEpJzGmALEuw/exec';
+
+    const response = await fetch(scriptUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        path: 'uploadScreenshot',
+        playerId: playerId,
+        image: base64
+      })
     });
 
-    const mailOptions = {
-      from: 'srivastavavansh64@gmail.com',
-      to: 'srivastavavansh64@gmail.com',             // Receiver
-      subject: 'New Screenshot Submission',
-      text: 'Screenshot attached.',
-      attachments: [
-        {
-          filename: req.file.originalname,
-          path: req.file.path
-        }
-      ]
-    };
+    const result = await response.json();
+    res.status(200).json(result);
 
-    await transporter.sendMail(mailOptions);
-
-    fs.unlinkSync(req.file.path); // Clean up uploaded file
-
-    res.json({ message: 'Screenshot sent successfully!' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to send screenshot.' });
+  } catch (err) {
+    console.error('❌ Upload failed:', err);
+    res.status(500).json({ success: false, message: `❌ Server error: ${err.message}` });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
+});
