@@ -6,21 +6,18 @@
   padding: 0;
   box-sizing: border-box;
 }
-/* Fullscreen Background Image */
+
+/* === FULLSCREEN BACKGROUND === */
 .fullscreen-image {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('image1.jpeg') no-repeat center center;
-  background-size: cover;
-  z-index: -1; /* behind everything */
-  filter: brightness(0.4); /* optional: darken for readability */
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('image1.jpeg') center/cover no-repeat;
+  filter: brightness(0.3);
+  z-index: -1;
 }
 
+/* === BODY === */
 body {
-  /* background: black; */
   color: #fff;
   font-family: 'Orbitron', sans-serif;
   overflow-x: hidden;
@@ -32,11 +29,11 @@ body {
   top: 20px;
   left: 0;
   width: 100%;
-  height: 80px; /* adjust as needed */
+  height: 80px;
   z-index: 1000;
 }
 
-/* LOGO: top-left */
+/* === LOGO === */
 .top-logo {
   position: absolute;
   top: 0;
@@ -44,7 +41,7 @@ body {
   height: 60px;
 }
 
-/* HEADING: top-center */
+/* === MAIN HEADING === */
 .main-event-heading {
   position: absolute;
   top: 50%;
@@ -54,27 +51,16 @@ body {
   font-family: 'Creepster', cursive;
   font-size: 4rem;
   font-weight: 900;
-  color: #fff;  /* plain white */
-  white-space: nowrap; /* keep in one line */
-  opacity: 1;  /* visible immediately */
-  /* No text-shadow, no animation */
-}
-
-
-/* === FULLSCREEN BACKGROUND === */
-.fullscreen-image {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: url('image1.jpeg') center/cover no-repeat;
-  filter: brightness(0.3);
-  z-index: -1;
+  color: #fff;
+  white-space: nowrap;
+  opacity: 1;
 }
 
 /* === MAIN CONTENT === */
 .overlay-content {
   position: relative;
   text-align: center;
-  margin-top: 200px; /* Enough gap below logo & heading */
+  margin-top: 200px;
 }
 
 .squid-game-gallery {
@@ -118,7 +104,7 @@ body {
   margin-top: 20px;
 }
 
-/* Base style for all action buttons */
+/* === BUTTONS === */
 button {
   padding: 12px 30px;
   font-size: 1.2rem;
@@ -131,58 +117,42 @@ button {
   letter-spacing: 1px;
   text-transform: uppercase;
   border-radius: 8px;
-  box-shadow:
-    0 0 5px #ff004c,
-    0 0 10px #ff004c inset;
+  box-shadow: 0 0 5px #ff004c, 0 0 10px #ff004c inset;
 }
 
-/* Hover & focus effects */
 button:hover,
 button:focus {
   background: #ff004c;
   color: #fff;
-  box-shadow:
-    0 0 10px #ff004c,
-    0 0 20px #ff004c inset;
+  box-shadow: 0 0 10px #ff004c, 0 0 20px #ff004c inset;
 }
 
-/* Specific style for YES button */
 .register-yes {
   border-color: #00ff9f;
   color: #00ff9f;
-  box-shadow:
-    0 0 5px #00ff9f,
-    0 0 10px #00ff9f inset;
+  box-shadow: 0 0 5px #00ff9f, 0 0 10px #00ff9f inset;
 }
 
 .register-yes:hover,
 .register-yes:focus {
   background: #00ff9f;
   color: #000;
-  box-shadow:
-    0 0 10px #00ff9f,
-    0 0 20px #00ff9f inset;
+  box-shadow: 0 0 10px #00ff9f, 0 0 20px #00ff9f inset;
 }
 
-/* Specific style for NO button */
 .register-no {
   border-color: #ff004c;
   color: #ff004c;
-  box-shadow:
-    0 0 5px #ff004c,
-    0 0 10px #ff004c inset;
+  box-shadow: 0 0 5px #ff004c, 0 0 10px #ff004c inset;
 }
 
 .register-no:hover,
 .register-no:focus {
   background: #ff004c;
   color: #fff;
-  box-shadow:
-    0 0 10px #ff004c,
-    0 0 20px #ff004c inset;
+  box-shadow: 0 0 10px #ff004c, 0 0 20px #ff004c inset;
 }
 
-/* Specific style for REGISTER button */
 .popup-button,
 .go-to-form-button {
   margin-top: 20px;
@@ -194,9 +164,7 @@ button:focus {
   font-size: 1.3rem;
   border-radius: 8px;
   transition: all 0.3s ease;
-  box-shadow:
-    0 0 10px #fff,
-    0 0 20px #fff inset;
+  box-shadow: 0 0 10px #fff, 0 0 20px #fff inset;
 }
 
 .popup-button:hover,
@@ -205,11 +173,8 @@ button:focus {
 .go-to-form-button:focus {
   background: #fff;
   color: #000;
-  box-shadow:
-    0 0 20px #fff,
-    0 0 40px #fff inset;
+  box-shadow: 0 0 20px #fff, 0 0 40px #fff inset;
 }
-
 
 .go-to-form-button {
   display: inline-block;
@@ -268,24 +233,6 @@ button:focus {
 .square { bottom: 20%; left: 30%; }
 
 /* === ANIMATIONS === */
-@keyframes titleReveal {
-  to { opacity: 1; }
-}
-
-@keyframes titlePulse {
-  0%, 100% { text-shadow: 0 0 30px #ff0055; }
-  50% { text-shadow: 0 0 60px #ff0055; }
-}
-
-@keyframes titleGlitch {
-  0% { transform: translateX(-50%) translateY(0); }
-  20% { transform: translateX(-50%) translateY(2px); }
-  40% { transform: translateX(-50%) translateY(-2px); }
-  60% { transform: translateX(-50%) translateY(2px); }
-  80% { transform: translateX(-50%) translateY(-2px); }
-  100% { transform: translateX(-50%) translateY(0); }
-}
-
 @keyframes float {
   from { transform: translateY(0); }
   to { transform: translateY(-20px); }
@@ -317,5 +264,77 @@ button:focus {
   #speakBtn {
     font-size: 1.2rem;
     padding: 10px 30px;
+  }
+}
+/* === RESPONSIVE FOR PORTRAIT PHONES === */
+@media (max-width: 768px) {
+  body {
+    font-size: 90%;
+  }
+
+  .top-bar {
+    height: 80px;
+  }
+
+  .top-logo {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 60px; /* bigger logo */
+  }
+
+  .main-event-heading {
+    position: relative;
+    margin-top: 70px;   /* smaller gap below logo */
+    font-size: 2rem;
+    width: 90%;
+    text-align: center;
+  }
+
+  .overlay-content {
+    margin-top: 180px; /* adjust content position below heading */
+    padding: 0 20px;
+  }
+
+  .animated-image {
+    max-width: 150px; /* smaller gallery images for mobile */
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  #speakBtn {
+    font-size: 1.2rem;
+    padding: 10px 30px;
+  }
+
+  button {
+    padding: 10px 25px;
+    font-size: 1rem;
+  }
+
+  .popup {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  .popup-heading {
+    font-size: 2rem;
+  }
+
+  .popup-image {
+    max-width: 200px;
+  }
+
+  .eliminated-text {
+    font-size: 2.2rem;
+  }
+
+  .go-to-form-button {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1.1rem;
   }
 }

@@ -1,6 +1,6 @@
 window.onload = () => {
   const speakBtn = document.getElementById("speakBtn");
-  const message = "Welcome to Squid Game - Minecraft Edition, hosted by the Event Managers Club! Step into the ultimate test of skill, strategy, and survival across six thrilling challenges — from Red Light, Green Light to the intense final PvP Arena. With 60 players and only one winner, the competition will be fierce and the stakes sky-high. Think you can survive them all? Don’t miss this one-of-a-kind online event — register now and secure your spot before it’s too late. Let the games begin!";
+  const message = "Welcome to Squid Game - Minecraft Edition, brought to you by the Event Managers Club! Enter a high-stakes world of six intense challenges — from the classic Red Light, Green Light to parkour and a final PvP showdown. Sixty players will compete, but only one will emerge victorious. Outsmart, outplay, and outlast your rivals in this unique online event. Spots are limited — register now and prove you have what it takes!";
   const speechText = document.getElementById("speechText");
   const countdownElem = document.getElementById("countdownTimer");
   const yesBtn = document.getElementById("yesBtn");
@@ -12,7 +12,11 @@ window.onload = () => {
   const bgMusic = document.getElementById("bgMusic");
   const successMessage = document.getElementById("registerSuccessMessage");
 
-  // Function to type text letter by letter
+  // ✅ Make sure voices are loaded for mobile
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
+
   function typeText(text, callback) {
     speechText.textContent = "";
     let i = 0;
@@ -26,7 +30,6 @@ window.onload = () => {
     }, 50);
   }
 
-  // Speech and typing combo
   function speakNow() {
     typeText(message, () => {
       document.getElementById("registerSection").style.display = "block";
@@ -41,6 +44,7 @@ window.onload = () => {
     const englishVoice = voices.find(v => v.lang.startsWith("en"));
     if (englishVoice) utterance.voice = englishVoice;
 
+    speechSynthesis.cancel(); // Stops any previous utterances
     speechSynthesis.speak(utterance);
 
     // Countdown Timer
@@ -56,16 +60,14 @@ window.onload = () => {
     }, 1000);
   }
 
-  // Load voices
-  if (speechSynthesis.getVoices().length === 0) {
-    speechSynthesis.addEventListener("voiceschanged", () => {
-      speakBtn.addEventListener("click", speakNow);
-    });
-  } else {
-    speakBtn.addEventListener("click", speakNow);
-  }
+  // ✅ Always bind immediately so mobile click triggers both audio + voice
+  speakBtn.addEventListener("click", () => {
+    speakNow();
+    bgMusic.volume = 0.2;
+    bgMusic.play().catch(() => {});
+  });
 
-  // Yes Button
+  // ✅ YES Button
   yesBtn.addEventListener("click", () => {
     yesPopup.style.display = "block";
     document.body.classList.add("blur-background");
@@ -77,6 +79,7 @@ window.onload = () => {
         const voices = speechSynthesis.getVoices();
         const englishVoice = voices.find(v => v.lang.startsWith("en"));
         if (englishVoice) msg.voice = englishVoice;
+        speechSynthesis.cancel();
         speechSynthesis.speak(msg);
         count++;
       } else {
@@ -87,7 +90,6 @@ window.onload = () => {
     repeatMessage();
     const intervalId = setInterval(repeatMessage, 3000);
 
-    // Show register further button after 5s
     setTimeout(() => {
       yesPopup.style.display = "none";
       document.body.classList.remove("blur-background");
@@ -98,16 +100,18 @@ window.onload = () => {
       clearInterval(intervalId);
       document.body.classList.remove("blur-background");
       registerFurtherBtn.textContent = "Registration Started ✅";
-
-      // Show success message
       successMessage.style.display = "block";
 
       const confirmation = new SpeechSynthesisUtterance("Registration started, go ahead!");
+      const voices = speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith("en"));
+      if (englishVoice) confirmation.voice = englishVoice;
+      speechSynthesis.cancel();
       speechSynthesis.speak(confirmation);
     });
   });
 
-  // No Button
+  // ✅ NO Button
   noBtn.addEventListener("click", () => {
     noPopup.style.display = "block";
     document.body.classList.add("blur-background", "red-blink");
@@ -116,16 +120,11 @@ window.onload = () => {
     const voices = speechSynthesis.getVoices();
     const englishVoice = voices.find(v => v.lang.startsWith("en"));
     if (englishVoice) msg.voice = englishVoice;
+    speechSynthesis.cancel();
     speechSynthesis.speak(msg);
   });
 
-  // Background music
-  bgMusic.volume = 0.01;
-  bgMusic.play().catch(() => {
-    speakBtn.addEventListener("click", () => bgMusic.play());
-  });
-
-  // Animate shapes
+  // ✅ Animate shapes as before
   const shapes = document.querySelectorAll(".shape");
   shapes.forEach(shape => {
     shape.style.animationDuration = `${Math.random() * 6 + 1}s`;
@@ -136,23 +135,21 @@ window.onload = () => {
       shape.style.transform = `translate(${xPos}px, 0)`;
     }, Math.random() * 4000 + 3000);
   });
-}
+};
 
+// ✅ FORM related
 const registerFurtherBtn = document.getElementById("registerFurtherBtn");
 const registerForm = document.getElementById("registrationForm");
 
-// Show form on clicking "REGISTER"
 registerFurtherBtn.addEventListener("click", () => {
   registerForm.style.display = "block";
 });
 
-// Validation function
+// ✅ Validation
 window.validateField = function (fieldId) {
   const input = document.getElementById(fieldId);
   const icon = document.getElementById("icon-" + fieldId);
   const value = input.value.trim();
-
-  // Dummy validation: just check if filled and at least 3 characters
   const isValid = value.length >= 3;
 
   icon.src = isValid ? "yes.png" : "No-removebg-preview.png";
@@ -164,11 +161,10 @@ window.validateField = function (fieldId) {
     icon.style.opacity = "0";
     setTimeout(() => icon.style.display = "none", 500);
   }, 1000);
-}
+};
 
-// Submit all fields
 window.submitForm = function () {
-  const fields = ["teamName", "member1", "regNo"]; // Add all your 10 field IDs
+  const fields = ["teamName", "member1", "regNo"];
   let allFilled = true;
 
   fields.forEach(id => {
@@ -181,28 +177,24 @@ window.submitForm = function () {
 
   if (allFilled) {
     alert("Registration Successful! 🎮");
-    // You can also send data to server here if needed
   }
-}
+};
 
 function submitToGoogleForm() {
   const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLScQJLfjS554ZURSTF3mfEn8ogPg8X-heyPR-NORhQSqPro1Iw/formResponse";
 
-
   const formData = new FormData();
-  formData.append("entry.1668573321", document.getElementById("teamName").value); // Replace with actual entry ID
+  formData.append("entry.1668573321", document.getElementById("teamName").value);
   formData.append("entry.454258648", document.getElementById("member1").value);
   formData.append("entry.1521181521", document.getElementById("regNo").value);
-  // Add other fields...
 
   fetch(formUrl, {
     method: "POST",
-    mode: "no-cors",  // Needed to prevent CORS errors
+    mode: "no-cors",
     body: formData
   }).then(() => {
     alert("Form submitted to Google Form!");
     location.reload();
-    // Optional: Reset form or show message
   }).catch(() => {
     alert("Failed to submit");
   });
