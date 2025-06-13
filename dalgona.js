@@ -126,7 +126,7 @@ function addResultToTable(playerId, shape) {
 }
 
 function sendToGoogleSheet(playerId, shape, link) {
-  fetch("https://script.google.com/macros/s/AKfycbzUX_XuNhTqIJ3tKEXokr_ugr7ZekhbGCC6tNBxV7hc5G03jBuFVITrIVIEpJzGmALEuw/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbzs7RssJbAq7xwzNev3UQiKungjM7BuHQyeWovQVIwuM0pG4x09tyWzfbL2V9jWgZEBPA/exec", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({

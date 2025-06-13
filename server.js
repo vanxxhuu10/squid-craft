@@ -23,7 +23,7 @@ app.post('/upload', upload.single('screenshot'), async (req, res) => {
     const mimeType = file.mimetype;
     const base64 = `data:${mimeType};base64,${file.buffer.toString('base64')}`;
 
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzUX_XuNhTqIJ3tKEXokr_ugr7ZekhbGCC6tNBxV7hc5G03jBuFVITrIVIEpJzGmALEuw/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzs7RssJbAq7xwzNev3UQiKungjM7BuHQyeWovQVIwuM0pG4x09tyWzfbL2V9jWgZEBPA/exec';
 
     const response = await fetch(scriptUrl, {
       method: 'POST',
