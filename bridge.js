@@ -125,9 +125,10 @@ function addToTable(playerId, number) {
   const existing = JSON.parse(localStorage.getItem("allotments") || "[]");
   existing.push({ playerId, number });
   localStorage.setItem("allotments", JSON.stringify(existing));
-
   // ✅ Send to Google Sheet (Bridge Number)
   sendToGoogleSheet(playerId, number);
+  showPopupWithVoice(`Player ID ${playerId} is allotted number ${number}`);
+
 }
 
 function loadFromStorage() {
@@ -184,3 +185,23 @@ function sendToGoogleSheet(playerId, number) {
     console.error("Failed to update Google Sheet", err);
   });
 }
+
+function showPopupWithVoice(message) {
+  // Create popup card
+  const popup = document.createElement("div");
+  popup.className = "popup-card";
+  popup.textContent = message;
+  document.getElementById("popupContainer").appendChild(popup);
+
+  // Remove after animation
+  setTimeout(() => {
+    popup.remove();
+  }, 3000);
+
+  // Speak the message
+  if ('speechSynthesis' in window) {
+    const utter = new SpeechSynthesisUtterance(message);
+    window.speechSynthesis.speak(utter);
+  }
+}
+

@@ -218,6 +218,29 @@
       background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
       animation: teamGlow 4s ease-in-out infinite;
     }
+    .popup-card {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  z-index: 9999;
+  animation: fadeInOut 3s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -20px); }
+  10% { opacity: 1; transform: translate(-50%, 0); }
+  90% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -20px); }
+}
+
 
     @keyframes teamGlow {
       0%, 100% { transform: rotate(0deg); }
@@ -356,7 +379,7 @@
         opacity: 1;
       }
     }
-
+    
     /* Responsive design */
     @media (max-width: 768px) {
       .team-container {
@@ -394,3 +417,5 @@
     .success-animation {
       animation: successPulse 0.5s ease-in-out;
     }
+
+    
