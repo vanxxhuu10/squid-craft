@@ -9,7 +9,7 @@
     box-sizing: border-box;
   }
   body, html {
-    margin: 0; padding: 0; height: 100vh; background: #000;
+    margin: 0; padding: 0; height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
     color: white;
@@ -61,6 +61,13 @@
     padding: 20px;
     gap: 20px;
   }
+  .fullscreen-image {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('image1.jpeg') center/cover no-repeat;
+  filter: brightness(0.3);
+  z-index: -1;
+}
   .tile {
     width: 120px;
     height: 160px;
@@ -98,7 +105,7 @@
 <body>
 
 <img src="emc_logo-removebg-preview.png" alt="EMC Logo" id="logo" />
-
+<div class="fullscreen-image"></div>
 <div id="header">SQUID GAME - MINECRAFT EDITION</div>
 
 <div id="inputContainer">
