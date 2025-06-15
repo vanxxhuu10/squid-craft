@@ -1,4 +1,14 @@
+// ✅ Global variables to handle intervals
+let countdownInterval;
+let typewriterInterval;
+
 window.onload = () => {
+  // ✅ Force fresh reload on refresh to reset everything cleanly
+  if (performance.getEntriesByType("navigation")[0].type === "reload") {
+    window.location.href = window.location.href.split('#')[0];
+    return;
+  }
+
   const speakBtn = document.getElementById("speakBtn");
   const message = "Squid Game — Minecraft Edition! Brought to you by the Event Managers Club, this is your shot at glory: six adrenaline-packed challenges, from Red Light, Green Light to parkour and a fierce PvP finale. Sixty contenders, one champion. Spots are few — register now and claim your chance to outwit and outlast the rest!";
   const speechText = document.getElementById("speechText");
@@ -12,7 +22,7 @@ window.onload = () => {
   const bgMusic = document.getElementById("bgMusic");
   const successMessage = document.getElementById("registerSuccessMessage");
 
-  // ✅ Make sure voices are loaded for mobile
+  // ✅ Load voices for speech synthesis
   window.speechSynthesis.onvoiceschanged = () => {
     window.speechSynthesis.getVoices();
   };
@@ -20,11 +30,12 @@ window.onload = () => {
   function typeText(text, callback) {
     speechText.textContent = "";
     let i = 0;
-    const interval = setInterval(() => {
+    clearInterval(typewriterInterval); // ✅ Clear previous typewriter if any
+    typewriterInterval = setInterval(() => {
       speechText.textContent += text.charAt(i);
       i++;
       if (i >= text.length) {
-        clearInterval(interval);
+        clearInterval(typewriterInterval);
         if (callback) callback();
       }
     }, 50);
@@ -40,17 +51,18 @@ window.onload = () => {
     utterance.rate = 1;
     utterance.volume = 1;
 
-    const voices = speechSynthesis.getVoices();
+    const voices = speechSynthesis.getVoVoices();
     const englishVoice = voices.find(v => v.lang.startsWith("en"));
     if (englishVoice) utterance.voice = englishVoice;
 
-    speechSynthesis.cancel(); // Stops any previous utterances
+    speechSynthesis.cancel(); // ✅ Stops any previous utterances
     speechSynthesis.speak(utterance);
 
-    // Countdown Timer
+    // ✅ Countdown Timer — clear old if any
+    clearInterval(countdownInterval);
     let timeLeft = 600;
     countdownElem.textContent = `Time left: ${timeLeft}s`;
-    const countdownInterval = setInterval(() => {
+    countdownInterval = setInterval(() => {
       timeLeft--;
       countdownElem.textContent = `Time left: ${timeLeft}s`;
       if (timeLeft <= 0) {
@@ -60,7 +72,7 @@ window.onload = () => {
     }, 1000);
   }
 
-  // ✅ Always bind immediately so mobile click triggers both audio + voice
+  // ✅ Speak Button Click
   speakBtn.addEventListener("click", () => {
     speakNow();
     bgMusic.volume = 0.2;
@@ -124,7 +136,7 @@ window.onload = () => {
     speechSynthesis.speak(msg);
   });
 
-  // ✅ Animate shapes as before
+  // ✅ Animate shapes (unchanged)
   const shapes = document.querySelectorAll(".shape");
   shapes.forEach(shape => {
     shape.style.animationDuration = `${Math.random() * 6 + 1}s`;
@@ -162,6 +174,7 @@ window.validateField = function (fieldId) {
     setTimeout(() => icon.style.display = "none", 500);
   }, 1000);
 };
+
 function transfer() {
   window.location.href = "https://forms.gle/wq7do4ncdPCNAB2d6";
 }
