@@ -1,9 +1,14 @@
-// ✅ Global variables to handle intervals
+// ✅ Global for intervals + voices
 let countdownInterval;
 let typewriterInterval;
+let availableVoices = [];
+
+// ✅ Load voices properly ONCE
+window.speechSynthesis.onvoiceschanged = () => {
+  availableVoices = speechSynthesis.getVoices();
+};
 
 window.onload = () => {
-  // ✅ Force fresh reload on refresh to reset everything cleanly
   if (performance.getEntriesByType("navigation")[0].type === "reload") {
     window.location.href = window.location.href.split('#')[0];
     return;
@@ -22,15 +27,10 @@ window.onload = () => {
   const bgMusic = document.getElementById("bgMusic");
   const successMessage = document.getElementById("registerSuccessMessage");
 
-  // ✅ Load voices for speech synthesis
-  window.speechSynthesis.onvoiceschanged = () => {
-    window.speechSynthesis.getVoices();
-  };
-
   function typeText(text, callback) {
     speechText.textContent = "";
     let i = 0;
-    clearInterval(typewriterInterval); // ✅ Clear previous typewriter if any
+    clearInterval(typewriterInterval);
     typewriterInterval = setInterval(() => {
       speechText.textContent += text.charAt(i);
       i++;
@@ -41,24 +41,29 @@ window.onload = () => {
     }, 50);
   }
 
+  function speakText(text) {
+    if (!text) return;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.pitch = 1;
+    utterance.rate = 1;
+    utterance.volume = 1;
+
+    if (availableVoices.length) {
+      const englishVoice = availableVoices.find(v => v.lang.startsWith("en"));
+      if (englishVoice) utterance.voice = englishVoice;
+    }
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utterance);
+  }
+
   function speakNow() {
     typeText(message, () => {
       document.getElementById("registerSection").style.display = "block";
     });
 
-    const utterance = new SpeechSynthesisUtterance(message);
-    utterance.pitch = 1;
-    utterance.rate = 1;
-    utterance.volume = 1;
+    speakText(message);
 
-    const voices = speechSynthesis.getVoVoices();
-    const englishVoice = voices.find(v => v.lang.startsWith("en"));
-    if (englishVoice) utterance.voice = englishVoice;
-
-    speechSynthesis.cancel(); // ✅ Stops any previous utterances
-    speechSynthesis.speak(utterance);
-
-    // ✅ Countdown Timer — clear old if any
     clearInterval(countdownInterval);
     let timeLeft = 600;
     countdownElem.textContent = `Time left: ${timeLeft}s`;
@@ -72,14 +77,12 @@ window.onload = () => {
     }, 1000);
   }
 
-  // ✅ Speak Button Click
   speakBtn.addEventListener("click", () => {
     speakNow();
     bgMusic.volume = 0.2;
     bgMusic.play().catch(() => {});
   });
 
-  // ✅ YES Button
   yesBtn.addEventListener("click", () => {
     yesPopup.style.display = "block";
     document.body.classList.add("blur-background");
@@ -87,12 +90,7 @@ window.onload = () => {
     let count = 0;
     const repeatMessage = () => {
       if (count < 1) {
-        const msg = new SpeechSynthesisUtterance("Welcome to the game — your fate is now sealed. May the odds be ever in your favor! Register yourself now to prove your skills and claim your place among the legends.");
-        const voices = speechSynthesis.getVoices();
-        const englishVoice = voices.find(v => v.lang.startsWith("en"));
-        if (englishVoice) msg.voice = englishVoice;
-        speechSynthesis.cancel();
-        speechSynthesis.speak(msg);
+        speakText("Welcome to the game — your fate is now sealed. May the odds be ever in your favor! Register yourself now to prove your skills and claim your place among the legends.");
         count++;
       } else {
         clearInterval(intervalId);
@@ -113,30 +111,16 @@ window.onload = () => {
       document.body.classList.remove("blur-background");
       registerFurtherBtn.textContent = "Registration Started ✅";
       successMessage.style.display = "block";
-
-      const confirmation = new SpeechSynthesisUtterance("Registration started, go ahead!");
-      const voices = speechSynthesis.getVoices();
-      const englishVoice = voices.find(v => v.lang.startsWith("en"));
-      if (englishVoice) confirmation.voice = englishVoice;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(confirmation);
+      speakText("Registration started, go ahead!");
     });
   });
 
-  // ✅ NO Button
   noBtn.addEventListener("click", () => {
     noPopup.style.display = "block";
     document.body.classList.add("blur-background", "red-blink");
-
-    const msg = new SpeechSynthesisUtterance("Choosing not to play means missing out — are you sure? For now, you’re Eliminated.");
-    const voices = speechSynthesis.getVoices();
-    const englishVoice = voices.find(v => v.lang.startsWith("en"));
-    if (englishVoice) msg.voice = englishVoice;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(msg);
+    speakText("Choosing not to play means missing out — are you sure? For now, you’re Eliminated.");
   });
 
-  // ✅ Animate shapes (unchanged)
   const shapes = document.querySelectorAll(".shape");
   shapes.forEach(shape => {
     shape.style.animationDuration = `${Math.random() * 6 + 1}s`;
