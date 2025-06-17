@@ -41,14 +41,29 @@ window.onload = () => {
 
   function speakText(text) {
     if (!text) return;
+
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.pitch = 1;
     utterance.rate = 1;
     utterance.volume = 1;
 
     if (availableVoices.length) {
-      const englishVoice = availableVoices.find(v => v.lang.startsWith("en"));
-      if (englishVoice) utterance.voice = englishVoice;
+      // ✅ Prefer male English voices
+      let maleVoice = availableVoices.find(v =>
+        v.lang.startsWith("en") && (
+          v.name.toLowerCase().includes("male") ||
+          v.name.toLowerCase().includes("david") ||
+          v.name.toLowerCase().includes("alex") ||
+          v.name.toLowerCase().includes("daniel")
+        )
+      );
+
+      // ✅ Fallback to any English voice
+      if (!maleVoice) {
+        maleVoice = availableVoices.find(v => v.lang.startsWith("en"));
+      }
+
+      utterance.voice = maleVoice;
     }
 
     speechSynthesis.cancel();
@@ -61,25 +76,32 @@ window.onload = () => {
     });
 
     speakText(message);
+
+    // ✅ Play background music
+    bgMusic.volume = 0.2;
+    bgMusic.play().catch(() => {});
   }
 
   speakBtn.addEventListener("click", () => {
     speakNow();
-
-    // ✅ Play background music properly
-    bgMusic.volume = 0.2;
-    if (bgMusic.paused) {
-      bgMusic.play().catch(err => {
-        console.log("Background music play failed:", err);
-      });
-    }
   });
 
   yesBtn.addEventListener("click", () => {
     yesPopup.style.display = "block";
     document.body.classList.add("blur-background");
 
-    speakText("Welcome to the game — your fate is now sealed. May the odds be ever in your favor! Register yourself now to prove your skills and claim your place among the legends.");
+    let count = 0;
+    const repeatMessage = () => {
+      if (count < 1) {
+        speakText("Welcome to the game — your fate is now sealed. May the odds be ever in your favor! Register yourself now to prove your skills and claim your place among the legends.");
+        count++;
+      } else {
+        clearInterval(intervalId);
+      }
+    };
+
+    repeatMessage();
+    const intervalId = setInterval(repeatMessage, 3000);
 
     setTimeout(() => {
       yesPopup.style.display = "none";
@@ -88,12 +110,11 @@ window.onload = () => {
     }, 5000);
 
     registerFurtherBtn.addEventListener("click", () => {
+      clearInterval(intervalId);
       document.body.classList.remove("blur-background");
       registerFurtherBtn.textContent = "Registration Started ✅";
       successMessage.style.display = "block";
       speakText("Registration started, go ahead!");
-
-      // ✅ Redirect to Google Form
       transfer();
     });
   });
@@ -116,7 +137,7 @@ window.onload = () => {
   });
 };
 
-// ✅ Google Form transfer function
+// ✅ Transfer function for Google Form
 function transfer() {
   window.location.href = "https://forms.gle/wq7do4ncdPCNAB2d6";
 }
