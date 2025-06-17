@@ -15,7 +15,7 @@ window.onload = () => {
   }
 
   const speakBtn = document.getElementById("speakBtn");
-  const message = "Squid Game — Minecraft Edition! Brought to you by the Event Managers Club, this is your shot at glory: six adrenaline-packed challenges, from Red Light, Green Light to parkour and a fierce PvP finale. Sixty contenders, one champion. Spots are few — register now and claim your chance to outwit and outlast the rest!";
+  const message = "Brought to you by the Event Managers Club, this is no ordinary competition — it’s a fight for survival. Face five heart-pounding challenges, each more intense than the previous, until it all culminates in a brutal PvP finale.Many worthy contenders. One champion. Spots are disappearing fast — register now and take your shot at glory.";
   const speechText = document.getElementById("speechText");
   const countdownElem = document.getElementById("countdownTimer");
   const yesBtn = document.getElementById("yesBtn");
