@@ -74,9 +74,7 @@ window.onload = () => {
       });
     }
   });
-function transfer() {
-  window.location.href = "https://forms.gle/wq7do4ncdPCNAB2d6";
-}
+
   yesBtn.addEventListener("click", () => {
     yesPopup.style.display = "block";
     document.body.classList.add("blur-background");
@@ -94,6 +92,9 @@ function transfer() {
       registerFurtherBtn.textContent = "Registration Started ✅";
       successMessage.style.display = "block";
       speakText("Registration started, go ahead!");
+
+      // ✅ Redirect to Google Form
+      transfer();
     });
   });
 
@@ -114,3 +115,8 @@ function transfer() {
     }, Math.random() * 4000 + 3000);
   });
 };
+
+// ✅ Google Form transfer function
+function transfer() {
+  window.location.href = "https://forms.gle/wq7do4ncdPCNAB2d6";
+}
