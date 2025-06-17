@@ -1,5 +1,4 @@
 // ✅ Global for intervals + voices
-let countdownInterval;
 let typewriterInterval;
 let availableVoices = [];
 
@@ -15,9 +14,8 @@ window.onload = () => {
   }
 
   const speakBtn = document.getElementById("speakBtn");
-  const message = "Brought to you by the Event Managers Club, this is no ordinary competition — it’s a fight for survival. Face five heart-pounding challenges, each more intense than the previous, until it all culminates in a brutal PvP finale.Many worthy contenders. One champion. Spots are disappearing fast — register now and take your shot at glory.";
+  const message = "Brought to you by the Event Managers Club, this is no ordinary competition — it’s a fight for survival. Face five heart-pounding challenges, each more intense than the previous, until it all culminates in a brutal PvP finale. Many worthy contenders. One champion. Spots are disappearing fast — register now and take your shot at glory.";
   const speechText = document.getElementById("speechText");
-  const countdownElem = document.getElementById("countdownTimer");
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const yesPopup = document.getElementById("yesPopup");
@@ -63,42 +61,25 @@ window.onload = () => {
     });
 
     speakText(message);
-
-    clearInterval(countdownInterval);
-    let timeLeft = 600;
-    countdownElem.textContent = `Time left: ${timeLeft}s`;
-    countdownInterval = setInterval(() => {
-      timeLeft--;
-      countdownElem.textContent = `Time left: ${timeLeft}s`;
-      if (timeLeft <= 0) {
-        clearInterval(countdownInterval);
-        countdownElem.textContent = "";
-      }
-    }, 1000);
   }
 
   speakBtn.addEventListener("click", () => {
     speakNow();
+
+    // ✅ Play background music properly
     bgMusic.volume = 0.2;
-    bgMusic.play().catch(() => {});
+    if (bgMusic.paused) {
+      bgMusic.play().catch(err => {
+        console.log("Background music play failed:", err);
+      });
+    }
   });
 
   yesBtn.addEventListener("click", () => {
     yesPopup.style.display = "block";
     document.body.classList.add("blur-background");
 
-    let count = 0;
-    const repeatMessage = () => {
-      if (count < 1) {
-        speakText("Welcome to the game — your fate is now sealed. May the odds be ever in your favor! Register yourself now to prove your skills and claim your place among the legends.");
-        count++;
-      } else {
-        clearInterval(intervalId);
-      }
-    };
-
-    repeatMessage();
-    const intervalId = setInterval(repeatMessage, 3000);
+    speakText("Welcome to the game — your fate is now sealed. May the odds be ever in your favor! Register yourself now to prove your skills and claim your place among the legends.");
 
     setTimeout(() => {
       yesPopup.style.display = "none";
@@ -107,7 +88,6 @@ window.onload = () => {
     }, 5000);
 
     registerFurtherBtn.addEventListener("click", () => {
-      clearInterval(intervalId);
       document.body.classList.remove("blur-background");
       registerFurtherBtn.textContent = "Registration Started ✅";
       successMessage.style.display = "block";
@@ -132,70 +112,3 @@ window.onload = () => {
     }, Math.random() * 4000 + 3000);
   });
 };
-
-// ✅ FORM related
-const registerFurtherBtn = document.getElementById("registerFurtherBtn");
-const registerForm = document.getElementById("registrationForm");
-
-registerFurtherBtn.addEventListener("click", () => {
-  registerForm.style.display = "block";
-});
-
-// ✅ Validation
-window.validateField = function (fieldId) {
-  const input = document.getElementById(fieldId);
-  const icon = document.getElementById("icon-" + fieldId);
-  const value = input.value.trim();
-  const isValid = value.length >= 3;
-
-  icon.src = isValid ? "yes.png" : "No-removebg-preview.png";
-  icon.style.display = "inline-block";
-  icon.style.transition = "opacity 1s";
-  icon.style.opacity = "1";
-
-  setTimeout(() => {
-    icon.style.opacity = "0";
-    setTimeout(() => icon.style.display = "none", 500);
-  }, 1000);
-};
-
-function transfer() {
-  window.location.href = "https://forms.gle/wq7do4ncdPCNAB2d6";
-}
-
-window.submitForm = function () {
-  const fields = ["teamName", "member1", "regNo"];
-  let allFilled = true;
-
-  fields.forEach(id => {
-    const val = document.getElementById(id).value.trim();
-    if (!val) {
-      alert(`Please fill ${id}`);
-      allFilled = false;
-    }
-  });
-
-  if (allFilled) {
-    alert("Registration Successful! 🎮");
-  }
-};
-
-function submitToGoogleForm() {
-  const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLScQJLfjS554ZURSTF3mfEn8ogPg8X-heyPR-NORhQSqPro1Iw/formResponse";
-
-  const formData = new FormData();
-  formData.append("entry.1668573321", document.getElementById("teamName").value);
-  formData.append("entry.454258648", document.getElementById("member1").value);
-  formData.append("entry.1521181521", document.getElementById("regNo").value);
-
-  fetch(formUrl, {
-    method: "POST",
-    mode: "no-cors",
-    body: formData
-  }).then(() => {
-    alert("Form submitted to Google Form!");
-    location.reload();
-  }).catch(() => {
-    alert("Failed to submit");
-  });
-}
