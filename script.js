@@ -39,6 +39,29 @@ window.onload = () => {
     }, 50);
   }
 
+  function getMaleVoice() {
+    if (!availableVoices.length) return null;
+
+    // ✅ Known male voice names by OS
+    const maleVoiceNames = [
+      "Microsoft David",
+      "Microsoft Mark",
+      "Alex",
+      "Daniel",
+      "Google UK English Male",
+      "en-US-Wavenet-D" // for Google Cloud TTS if applicable
+    ];
+
+    // Try exact name match first
+    for (const name of maleVoiceNames) {
+      const voice = availableVoices.find(v => v.name === name);
+      if (voice) return voice;
+    }
+
+    // Fallback: pick first English voice
+    return availableVoices.find(v => v.lang.startsWith("en")) || null;
+  }
+
   function speakText(text) {
     if (!text) return;
 
@@ -47,26 +70,12 @@ window.onload = () => {
     utterance.rate = 1;
     utterance.volume = 1;
 
-    if (availableVoices.length) {
-      // ✅ Prefer male English voices
-      let maleVoice = availableVoices.find(v =>
-        v.lang.startsWith("en") && (
-          v.name.toLowerCase().includes("male") ||
-          v.name.toLowerCase().includes("david") ||
-          v.name.toLowerCase().includes("alex") ||
-          v.name.toLowerCase().includes("daniel")
-        )
-      );
-
-      // ✅ Fallback to any English voice
-      if (!maleVoice) {
-        maleVoice = availableVoices.find(v => v.lang.startsWith("en"));
-      }
-
+    const maleVoice = getMaleVoice();
+    if (maleVoice) {
       utterance.voice = maleVoice;
     }
 
-    speechSynthesis.cancel();
+    speechSynthesis.cancel(); // cancel any current speech
     speechSynthesis.speak(utterance);
   }
 
@@ -137,7 +146,7 @@ window.onload = () => {
   });
 };
 
-// ✅ Transfer function for Google Form
+// ✅ Google Form transfer function
 function transfer() {
   window.location.href = "https://forms.gle/wq7do4ncdPCNAB2d6";
 }
