@@ -74,7 +74,9 @@ window.onload = () => {
       });
     }
   });
-
+function transfer() {
+  window.location.href = "https://forms.gle/wq7do4ncdPCNAB2d6";
+}
   yesBtn.addEventListener("click", () => {
     yesPopup.style.display = "block";
     document.body.classList.add("blur-background");
