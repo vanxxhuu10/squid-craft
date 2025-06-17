@@ -39,6 +39,46 @@ window.onload = () => {
     }, 50);
   }
 
+  function getMaleVoice() {
+    if (!availableVoices.length) return null;
+
+    // ✅ Known male voice names by OS
+    const maleVoiceNames = [
+      "Microsoft David",
+      "Microsoft Mark",
+      "Alex",
+      "Daniel",
+      "Google UK English Male",
+      "en-US-Wavenet-D" // for Google Cloud TTS if applicable
+    ];
+
+    // Try exact name match first
+    for (const name of maleVoiceNames) {
+      const voice = availableVoices.find(v => v.name === name);
+      if (voice) return voice;
+    }
+
+    // Fallback: pick first English voice
+    return availableVoices.find(v => v.lang.startsWith("en")) || null;
+  }
+
+  function speakText(text) {
+    if (!text) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.pitch = 1;
+    utterance.rate = 1;
+    utterance.volume = 1;
+
+    const maleVoice = getMaleVoice();
+    if (maleVoice) {
+      utterance.voice = maleVoice;
+    }
+
+    speechSynthesis.cancel(); // cancel any current speech
+    speechSynthesis.speak(utterance);
+  }
+
   function speakNow() {
     typeText(message, () => {
       document.getElementById("registerSection").style.display = "block";
